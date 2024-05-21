@@ -1,5 +1,8 @@
+from collections.abc import Sequence
+
 from django.contrib import admin
 from django.core.paginator import Paginator
+from django.http.request import HttpRequest
 from django.shortcuts import redirect
 from django.urls import path
 
@@ -28,11 +31,23 @@ class LinkInline(admin.TabularInline):
 class PageAdmin(admin.ModelAdmin):
     change_list_template = "admin/scraper/page/change_list.html"
     change_form_template = "admin/scraper/page/change_form.html"
-    list_display = ("id", "name", "url", "total_links")
     readonly_fields = (
         "name",
         "url",
         "total_links",
+        "created_by",
+    )
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "url",
+                    "total_links",
+                )
+            },
+        ),
     )
     actions = None
 
@@ -56,8 +71,9 @@ class PageAdmin(admin.ModelAdmin):
             form = scraperForm(request.POST)
             if form.is_valid():
                 url = form.cleaned_data["url"]
-                create_page(url)
-                self.message_user(request, "The page has been scraped")
+                message, status = create_page(url, request.user)
+                level = "success" if status == 200 else "error"
+                self.message_user(request=request, message=message, level=level)
             else:
                 self.message_user(request, "Invalid URL")
         return redirect("admin:scraper_page_changelist")
@@ -82,6 +98,23 @@ class PageAdmin(admin.ModelAdmin):
         extra_context["page_obj"] = page_obj
 
         return super().change_view(request, object_id, form_url, extra_context)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(created_by=request.user)
+
+    def get_list_display(self, request):
+        default_list_display = [
+            "id",
+            "name",
+            "url",
+            "total_links",
+        ]
+        if request.user.is_superuser:
+            default_list_display.append("created_by")
+        return default_list_display
 
 
 @admin.register(Link)
