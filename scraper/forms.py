@@ -4,7 +4,11 @@ from django import forms
 class scraperForm(forms.Form):
     url = forms.URLField(
         label="",
-        widget=forms.URLInput(attrs={"size": 50}),
+        widget=forms.URLInput(
+            attrs={
+                "size": 50,
+                "placeholder": "Add new Page",
+            }
+        ),
         initial="",
-        help_text="Add new Page",
     )
