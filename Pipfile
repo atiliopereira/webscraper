@@ -10,6 +10,7 @@ requests = "*"
 beautifulsoup4 = "*"
 pytest-django = "*"
 model-bakery = "*"
+django-allauth = "*"
 
 [dev-packages]
 
