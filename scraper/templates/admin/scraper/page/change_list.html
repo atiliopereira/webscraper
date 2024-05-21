@@ -1,0 +1,26 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>scraper</h1>
+                <form method="post" action="{% url 'admin:scraper_page_scrape' %}">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            {{ form.as_p }}
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary">Scrape</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% block result_list %}
+        {{ block.super }}
+    {% endblock %}
+{% endblock %}

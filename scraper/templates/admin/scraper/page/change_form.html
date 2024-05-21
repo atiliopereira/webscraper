@@ -1,0 +1,40 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block after_related_objects %}
+    <h2>Related Links</h2>
+    <div class="module">
+        <table class="table">
+            {% for link in links %}
+                <tr class="row1">
+                    <td>{{ link.name }}</td>
+                    <td><a href="{{ link.url }}">{{ link.url }}</a></td>
+                </tr>
+            {% empty %}
+                <tr class="row1">
+                    <td colspan="2">No related links.</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {% if is_paginated %}
+            <div class="paginator">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" class="button">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="button">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="button">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="button">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
