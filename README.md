@@ -44,6 +44,15 @@ The application will be available at [http://127.0.0.1:8000/](http://127.0.0.1:8
 
 To access the user registration and login pages, navigate to [http://127.0.0.1:8000/accounts/](http://127.0.0.1:8000/accounts/).
 
+[Optional]:
+You can create a superuser that will allow you additional functions like:
+
+- Create, Update and Delete Pages, Links and Users.
+- See all the Pages scraped by all the users.
+    ```bash
+        python manage.py createsuperuser
+    ```
+
 ## Testing
 
 This project uses pytest for testing.
